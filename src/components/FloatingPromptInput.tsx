@@ -19,6 +19,7 @@ import { FilePicker } from "./FilePicker";
 import { ImagePreview } from "./ImagePreview";
 import { type FileEntry } from "@/lib/api";
 import { getCurrentWebviewWindow } from "@tauri-apps/api/webviewWindow";
+import { useTranslation } from "@/hooks/useTranslation";
 
 interface FloatingPromptInputProps {
   /**
@@ -172,6 +173,7 @@ const FloatingPromptInputInner = (
   }: FloatingPromptInputProps,
   ref: React.Ref<FloatingPromptInputRef>,
 ) => {
+  const { t } = useTranslation();
   const [prompt, setPrompt] = useState("");
   const [selectedModel, setSelectedModel] = useState<"sonnet" | "opus">(defaultModel);
   const [selectedThinkingMode, setSelectedThinkingMode] = useState<ThinkingMode>("auto");
@@ -490,7 +492,7 @@ const FloatingPromptInputInner = (
               onClick={(e) => e.stopPropagation()}
             >
               <div className="flex items-center justify-between">
-                <h3 className="text-sm font-medium">Compose your prompt</h3>
+                <h3 className="text-sm font-medium">{t('floatingPrompt.placeholder')}</h3>
                 <Button
                   variant="ghost"
                   size="icon"
@@ -514,7 +516,7 @@ const FloatingPromptInputInner = (
                 ref={expandedTextareaRef}
                 value={prompt}
                 onChange={handleTextChange}
-                placeholder="Type your prompt here..."
+                placeholder={t('placeholders.typePromptHere')}
                 className="min-h-[200px] resize-none"
                 disabled={isLoading || disabled}
                 onDragEnter={handleDrag}
@@ -526,7 +528,7 @@ const FloatingPromptInputInner = (
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4">
                   <div className="flex items-center gap-2">
-                    <span className="text-xs text-muted-foreground">Model:</span>
+                    <span className="text-xs text-muted-foreground">{t('createAgent.model')}:</span>
                     <Button
                       variant="outline"
                       size="sm"
@@ -539,7 +541,7 @@ const FloatingPromptInputInner = (
                   </div>
 
                   <div className="flex items-center gap-2">
-                    <span className="text-xs text-muted-foreground">Thinking:</span>
+                    <span className="text-xs text-muted-foreground">{t('common.thinking') || 'Thinking'}:</span>
                     <Popover
                       trigger={
                         <TooltipProvider>
@@ -756,7 +758,7 @@ const FloatingPromptInputInner = (
                   value={prompt}
                   onChange={handleTextChange}
                   onKeyDown={handleKeyDown}
-                  placeholder={dragActive ? "Drop images here..." : "Ask Claude anything..."}
+                  placeholder={dragActive ? t('placeholders.dropImagesHere') || "Drop images here..." : t('placeholders.typePromptHere')}
                   disabled={isLoading || disabled}
                   className={cn(
                     "min-h-[44px] max-h-[120px] resize-none pr-10",
@@ -799,7 +801,7 @@ const FloatingPromptInputInner = (
                 {isLoading ? (
                   <>
                     <Square className="h-4 w-4 mr-1" />
-                    Stop
+                    {t('agentExecution.stop')}
                   </>
                 ) : (
                   <Send className="h-4 w-4" />
@@ -808,7 +810,7 @@ const FloatingPromptInputInner = (
             </div>
 
             <div className="mt-2 text-xs text-muted-foreground">
-              Press Enter to send, Shift+Enter for new line{projectPath?.trim() && ", @ to mention files, drag & drop images"}
+              {t('floatingPrompt.keyboardHints') || 'Press Enter to send, Shift+Enter for new line'}{projectPath?.trim() && ", @ to mention files, drag & drop images"}
             </div>
           </div>
         </div>

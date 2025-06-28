@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import type { FileEntry } from "@/lib/api";
 import { cn } from "@/lib/utils";
+import { useTranslation } from "@/hooks/useTranslation";
 
 // Global caches that persist across component instances
 const globalDirectoryCache = new Map<string, FileEntry[]>();
@@ -101,6 +102,7 @@ export const FilePicker: React.FC<FilePickerProps> = ({
   initialQuery = "",
   className,
 }) => {
+  const { t } = useTranslation();
   const searchQuery = initialQuery;
   
   const [currentPath, setCurrentPath] = useState(basePath);
@@ -277,7 +279,7 @@ export const FilePicker: React.FC<FilePickerProps> = ({
       console.error('[FilePicker] Error details:', err);
       // Only set error if we don't have cached data to show
       if (!globalDirectoryCache.has(path)) {
-        setError(err instanceof Error ? err.message : 'Failed to load directory');
+        setError(err instanceof Error ? err.message : t('projects.failedToLoad'));
       }
     } finally {
       setIsLoading(false);
@@ -318,7 +320,7 @@ export const FilePicker: React.FC<FilePickerProps> = ({
       // Only set error if we don't have cached data to show
       const cacheKey = `${basePath}:${query}`;
       if (!globalSearchCache.has(cacheKey)) {
-        setError(err instanceof Error ? err.message : 'Search failed');
+        setError(err instanceof Error ? err.message : t('common.searchFailed'));
       }
     } finally {
       setIsLoading(false);
@@ -423,7 +425,7 @@ export const FilePicker: React.FC<FilePickerProps> = ({
           <div className="flex flex-col items-center justify-center h-full">
             <Search className="h-8 w-8 text-muted-foreground mb-2" />
             <span className="text-sm text-muted-foreground">
-              {searchQuery.trim() ? 'No files found' : 'Empty directory'}
+              {searchQuery.trim() ? t('common.noFilesFound') : t('common.emptyDirectory')}
             </span>
           </div>
         )}
@@ -448,7 +450,7 @@ export const FilePicker: React.FC<FilePickerProps> = ({
                     "text-left text-sm",
                     isSelected && "bg-accent"
                   )}
-                  title={entry.is_directory ? "Click to select • Double-click to enter" : "Click to select"}
+                  title={entry.is_directory ? t('common.clickToSelect') : t('iconPicker.clickToSelect')}
                 >
                   <Icon className={cn(
                     "h-4 w-4 flex-shrink-0",

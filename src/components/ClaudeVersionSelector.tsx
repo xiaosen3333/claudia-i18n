@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Loader2, Terminal, Package, Check } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useTranslation } from "@/hooks/useTranslation";
 
 interface ClaudeVersionSelectorProps {
   /**
@@ -52,6 +53,7 @@ export const ClaudeVersionSelector: React.FC<ClaudeVersionSelectorProps> = ({
   onSave,
   isSaving = false,
 }) => {
+  const { t } = useTranslation();
   const [installations, setInstallations] = useState<ClaudeInstallation[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -91,7 +93,7 @@ export const ClaudeVersionSelector: React.FC<ClaudeVersionSelectorProps> = ({
       }
     } catch (err) {
       console.error("Failed to load Claude installations:", err);
-      setError(err instanceof Error ? err.message : "Failed to load Claude installations");
+      setError(err instanceof Error ? err.message : t('claudeVersion.failedToLoadInstallations'));
     } finally {
       setLoading(false);
     }
@@ -108,15 +110,15 @@ export const ClaudeVersionSelector: React.FC<ClaudeVersionSelectorProps> = ({
   };
 
   const getSourceLabel = (source: string) => {
-    if (source === "which") return "System PATH";
-    if (source === "homebrew") return "Homebrew";
-    if (source === "system") return "System";
+    if (source === "which") return t('claudeVersion.systemPath');
+    if (source === "homebrew") return t('claudeVersion.homebrew');
+    if (source === "system") return t('claudeVersion.system');
     if (source.startsWith("nvm")) return source.replace("nvm ", "NVM ");
-    if (source === "local-bin") return "Local bin";
-    if (source === "claude-local") return "Claude local";
-    if (source === "npm-global") return "NPM global";
-    if (source === "yarn" || source === "yarn-global") return "Yarn";
-    if (source === "bun") return "Bun";
+    if (source === "local-bin") return t('claudeVersion.localBin');
+    if (source === "claude-local") return t('claudeVersion.claudeLocal');
+    if (source === "npm-global") return t('claudeVersion.npmGlobal');
+    if (source === "yarn" || source === "yarn-global") return t('claudeVersion.yarn');
+    if (source === "bun") return t('claudeVersion.bun');
     return source;
   };
 
@@ -140,7 +142,7 @@ export const ClaudeVersionSelector: React.FC<ClaudeVersionSelectorProps> = ({
     return (
       <Card className={cn("p-4", className)}>
         <div className="text-sm text-muted-foreground">
-          No Claude Code installations found on your system.
+          {t('claudeVersion.noInstallationsFound')}
         </div>
       </Card>
     );
@@ -150,7 +152,7 @@ export const ClaudeVersionSelector: React.FC<ClaudeVersionSelectorProps> = ({
     <div className={cn("space-y-4", className)}>
       <div>
         <Label className="text-sm font-medium mb-3 block">
-          Select Claude Code Installation
+          {t('claudeVersion.selectInstallation')}
         </Label>
         <RadioGroup
           value={selectedInstallation?.path}
@@ -193,7 +195,7 @@ export const ClaudeVersionSelector: React.FC<ClaudeVersionSelectorProps> = ({
                       {selectedPath === installation.path && (
                         <Badge variant="default" className="text-xs">
                           <Check className="w-3 h-3 mr-1" />
-                          Current
+                          {t('claudeVersion.current')}
                         </Badge>
                       )}
                     </div>
@@ -218,10 +220,10 @@ export const ClaudeVersionSelector: React.FC<ClaudeVersionSelectorProps> = ({
             {isSaving ? (
               <>
                 <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                Saving...
+                {t('claudeVersion.saving')}
               </>
             ) : (
-              "Save Selection"
+              t('claudeVersion.saveSelection')
             )}
           </Button>
         </div>

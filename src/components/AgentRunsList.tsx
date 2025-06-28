@@ -9,6 +9,7 @@ import { formatISOTimestamp } from "@/lib/date-utils";
 import type { AgentRunWithMetrics } from "@/lib/api";
 import { AGENT_ICONS } from "./CCAgents";
 import { AgentRunOutputViewer } from "./AgentRunOutputViewer";
+import { useTranslation } from "@/hooks/useTranslation";
 
 interface AgentRunsListProps {
   /**
@@ -41,6 +42,7 @@ export const AgentRunsList: React.FC<AgentRunsListProps> = ({
   onRunClick,
   className,
 }) => {
+  const { t } = useTranslation();
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedRun, setSelectedRun] = useState<AgentRunWithMetrics | null>(null);
   
@@ -171,10 +173,10 @@ export const AgentRunsList: React.FC<AgentRunsListProps> = ({
                         }
                         className="text-xs"
                       >
-                        {run.status === "completed" ? "Completed" :
-                         run.status === "running" ? "Running" :
-                         run.status === "failed" ? "Failed" :
-                         "Pending"}
+                        {run.status === "completed" ? t('status.completed') :
+                         run.status === "running" ? t('status.running') :
+                         run.status === "failed" ? t('status.failed') :
+                         t('status.pending')}
                       </Badge>
                     </div>
                   </div>

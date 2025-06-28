@@ -8,6 +8,7 @@ import { ClaudeMemoriesDropdown } from "@/components/ClaudeMemoriesDropdown";
 import { cn } from "@/lib/utils";
 import { formatUnixTimestamp, formatISOTimestamp, truncateText, getFirstLine } from "@/lib/date-utils";
 import type { Session, ClaudeMdFile } from "@/lib/api";
+import { useTranslation } from "@/hooks/useTranslation";
 
 interface SessionListProps {
   /**
@@ -57,6 +58,7 @@ export const SessionList: React.FC<SessionListProps> = ({
   onEditClaudeFile,
   className,
 }) => {
+  const { t } = useTranslation();
   const [currentPage, setCurrentPage] = useState(1);
   
   // Calculate pagination
@@ -173,7 +175,7 @@ export const SessionList: React.FC<SessionListProps> = ({
                             {session.todo_data && (
                               <div className="flex items-center space-x-1">
                                 <Calendar className="h-3 w-3" />
-                                <span>Has todo</span>
+                                <span>{t('projects.hasTodo')}</span>
                               </div>
                             )}
                           </div>

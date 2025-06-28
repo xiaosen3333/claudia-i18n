@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { ExternalLink, FileQuestion, Terminal, AlertCircle, Loader2 } from "lucide-react";
 import { ClaudeVersionSelector } from "./ClaudeVersionSelector";
+import { useTranslation } from "@/hooks/useTranslation";
 
 interface ClaudeBinaryDialogProps {
   open: boolean;
@@ -13,6 +14,7 @@ interface ClaudeBinaryDialogProps {
 }
 
 export function ClaudeBinaryDialog({ open, onOpenChange, onSuccess, onError }: ClaudeBinaryDialogProps) {
+  const { t } = useTranslation();
   const [selectedInstallation, setSelectedInstallation] = useState<ClaudeInstallation | null>(null);
   const [isValidating, setIsValidating] = useState(false);
   const [hasInstallations, setHasInstallations] = useState(true);
@@ -50,7 +52,7 @@ export function ClaudeBinaryDialog({ open, onOpenChange, onSuccess, onError }: C
       onOpenChange(false);
     } catch (error) {
       console.error("Failed to save Claude binary path:", error);
-      onError(error instanceof Error ? error.message : "Failed to save Claude binary path");
+      onError(error instanceof Error ? error.message : t('claude.binaryPathSaved'));
     } finally {
       setIsValidating(false);
     }
@@ -131,7 +133,7 @@ export function ClaudeBinaryDialog({ open, onOpenChange, onSuccess, onError }: C
             onClick={handleSave} 
             disabled={isValidating || !selectedInstallation || !hasInstallations}
           >
-            {isValidating ? "Validating..." : hasInstallations ? "Save Selection" : "No Installations Found"}
+            {isValidating ? t('claudeVersion.validating') : hasInstallations ? t('claudeVersion.saveSelection') : t('claudeVersion.noInstallationsFound')}
           </Button>
         </DialogFooter>
       </DialogContent>

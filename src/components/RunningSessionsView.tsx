@@ -8,6 +8,7 @@ import { Toast, ToastContainer } from '@/components/ui/toast';
 import { SessionOutputViewer } from './SessionOutputViewer';
 import { api } from '@/lib/api';
 import type { AgentRun } from '@/lib/api';
+import { useTranslation } from '@/hooks/useTranslation';
 
 interface RunningSessionsViewProps {
   className?: string;
@@ -16,6 +17,7 @@ interface RunningSessionsViewProps {
 }
 
 export function RunningSessionsView({ className, showBackButton = false, onBack }: RunningSessionsViewProps) {
+  const { t } = useTranslation();
   const [runningSessions, setRunningSessions] = useState<AgentRun[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -136,7 +138,7 @@ export function RunningSessionsView({ className, showBackButton = false, onBack 
           className="flex items-center space-x-2"
         >
           <RefreshCw className={`h-4 w-4 ${refreshing ? 'animate-spin' : ''}`} />
-          <span>Refresh</span>
+          <span>{t('common.refresh')}</span>
         </Button>
       </div>
 
@@ -187,7 +189,7 @@ export function RunningSessionsView({ className, showBackButton = false, onBack 
                         className="flex items-center space-x-2"
                       >
                         <Eye className="h-4 w-4" />
-                        <span>View Output</span>
+                        <span>{t('common.viewOutput')}</span>
                       </Button>
                       <Button
                         variant="destructive"
@@ -196,7 +198,7 @@ export function RunningSessionsView({ className, showBackButton = false, onBack 
                         className="flex items-center space-x-2"
                       >
                         <Square className="h-4 w-4" />
-                        <span>Stop</span>
+                        <span>{t('common.stop')}</span>
                       </Button>
                     </div>
                   </div>

@@ -27,6 +27,7 @@ import { ErrorBoundary } from './ErrorBoundary';
 import { formatISOTimestamp } from '@/lib/date-utils';
 import { AGENT_ICONS } from './CCAgents';
 import type { ClaudeStreamMessage } from './AgentExecution';
+import { useTranslation } from '@/hooks/useTranslation';
 
 interface AgentRunOutputViewerProps {
   /**
@@ -62,6 +63,7 @@ export function AgentRunOutputViewer({
   onOpenFullView,
   className 
 }: AgentRunOutputViewerProps) {
+  const { t } = useTranslation();
   const [messages, setMessages] = useState<ClaudeStreamMessage[]>([]);
   const [rawJsonlOutput, setRawJsonlOutput] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
@@ -169,7 +171,7 @@ export function AgentRunOutputViewer({
       }
     } catch (error) {
       console.error('Failed to load agent output:', error);
-      setToast({ message: 'Failed to load agent output', type: 'error' });
+      setToast({ message: t('agentRunOutput.failedToLoadOutput'), type: 'error' });
     } finally {
       setLoading(false);
     }
@@ -203,11 +205,11 @@ export function AgentRunOutputViewer({
       });
 
       const completeUnlisten = await listen<boolean>(`agent-complete:${run.id}`, () => {
-        setToast({ message: 'Agent execution completed', type: 'success' });
+        setToast({ message: t('agentRunOutput.agentExecutionCompleted'), type: 'success' });
       });
 
       const cancelUnlisten = await listen<boolean>(`agent-cancelled:${run.id}`, () => {
-        setToast({ message: 'Agent execution was cancelled', type: 'error' });
+        setToast({ message: t('agentRunOutput.agentExecutionCancelled'), type: 'error' });
       });
 
       unlistenRefs.current = [outputUnlisten, errorUnlisten, completeUnlisten, cancelUnlisten];
@@ -221,13 +223,13 @@ export function AgentRunOutputViewer({
     const jsonl = rawJsonlOutput.join('\n');
     await navigator.clipboard.writeText(jsonl);
     setCopyPopoverOpen(false);
-    setToast({ message: 'Output copied as JSONL', type: 'success' });
+    setToast({ message: t('agentRunOutput.outputCopiedAsJsonl'), type: 'success' });
   };
 
   const handleCopyAsMarkdown = async () => {
-    let markdown = `# Agent Execution: ${run.agent_name}\n\n`;
+    let markdown = `# ${t('agentRunOutput.agentExecution')} ${run.agent_name}\n\n`;
     markdown += `**Task:** ${run.task}\n`;
-    markdown += `**Model:** ${run.model === 'opus' ? 'Claude 4 Opus' : 'Claude 4 Sonnet'}\n`;
+    markdown += `**Model:** ${run.model === 'opus' ? t('agentRunOutput.claudeOpus') : t('agentRunOutput.claudeSonnet')}\n`;
     markdown += `**Date:** ${formatISOTimestamp(run.created_at)}\n`;
     if (run.metrics?.duration_ms) markdown += `**Duration:** ${(run.metrics.duration_ms / 1000).toFixed(2)}s\n`;
     if (run.metrics?.total_tokens) markdown += `**Total Tokens:** ${run.metrics.total_tokens}\n`;
@@ -278,7 +280,7 @@ export function AgentRunOutputViewer({
 
     await navigator.clipboard.writeText(markdown);
     setCopyPopoverOpen(false);
-    setToast({ message: 'Output copied as Markdown', type: 'success' });
+    setToast({ message: t('agentRunOutput.outputCopiedAsMarkdown'), type: 'success' });
   };
 
   const refreshOutput = async () => {
@@ -405,7 +407,7 @@ export function AgentRunOutputViewer({
                     {run.status === 'running' && (
                       <div className="flex items-center gap-1">
                         <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                        <span className="text-xs text-green-600 font-medium">Running</span>
+                        <span className="text-xs text-green-600 font-medium">{t('agentRunOutput.running')}</span>
                       </div>
                     )}
                   </CardTitle>
@@ -414,7 +416,7 @@ export function AgentRunOutputViewer({
                   </p>
                   <div className="flex items-center gap-3 text-xs text-muted-foreground mt-2">
                     <Badge variant="outline" className="text-xs">
-                      {run.model === 'opus' ? 'Claude 4 Opus' : 'Claude 4 Sonnet'}
+                      {run.model === 'opus' ? t('agentRunOutput.claudeOpus') : t('agentRunOutput.claudeSonnet')}
                     </Badge>
                     <div className="flex items-center gap-1">
                       <Clock className="h-3 w-3" />
@@ -447,7 +449,7 @@ export function AgentRunOutputViewer({
                       className="h-8 px-2"
                     >
                       <Copy className="h-4 w-4 mr-1" />
-                      Copy
+                      {t('agentRunOutput.copy')}
                       <ChevronDown className="h-3 w-3 ml-1" />
                     </Button>
                   }
@@ -459,7 +461,7 @@ export function AgentRunOutputViewer({
                         className="w-full justify-start"
                         onClick={handleCopyAsJsonl}
                       >
-                        Copy as JSONL
+                        {t('agentRunOutput.copyAsJsonl')}
                       </Button>
                       <Button
                         variant="ghost"
@@ -467,7 +469,7 @@ export function AgentRunOutputViewer({
                         className="w-full justify-start"
                         onClick={handleCopyAsMarkdown}
                       >
-                        Copy as Markdown
+                        {t('agentRunOutput.copyAsMarkdown')}
                       </Button>
                     </div>
                   }
@@ -480,7 +482,7 @@ export function AgentRunOutputViewer({
                     variant="ghost"
                     size="sm"
                     onClick={onOpenFullView}
-                    title="Open in full view"
+                    title={t('agentRunOutput.openInFullView')}
                     className="h-8 px-2"
                   >
                     <ExternalLink className="h-4 w-4" />
@@ -490,7 +492,7 @@ export function AgentRunOutputViewer({
                   variant="ghost"
                   size="sm"
                   onClick={() => setIsFullscreen(!isFullscreen)}
-                  title={isFullscreen ? "Exit fullscreen" : "Enter fullscreen"}
+                  title={isFullscreen ? t('agentRunOutput.exitFullscreen') : t('agentRunOutput.enterFullscreen')}
                   className="h-8 px-2"
                 >
                   {isFullscreen ? (
@@ -504,7 +506,7 @@ export function AgentRunOutputViewer({
                   size="sm"
                   onClick={refreshOutput}
                   disabled={refreshing}
-                  title="Refresh output"
+                  title={t('agentRunOutput.refreshOutput')}
                   className="h-8 px-2"
                 >
                   <RotateCcw className={`h-4 w-4 ${refreshing ? 'animate-spin' : ''}`} />
@@ -525,12 +527,12 @@ export function AgentRunOutputViewer({
               <div className="flex items-center justify-center h-full">
                 <div className="flex items-center space-x-2">
                   <RefreshCw className="h-4 w-4 animate-spin" />
-                  <span>Loading output...</span>
+                  <span>{t('agentRunOutput.loadingOutput')}</span>
                 </div>
               </div>
             ) : messages.length === 0 ? (
               <div className="flex items-center justify-center h-full text-muted-foreground">
-                <p>No output available yet</p>
+                <p>{t('agentRunOutput.noOutputAvailable')}</p>
               </div>
             ) : (
               <div 
@@ -578,7 +580,7 @@ export function AgentRunOutputViewer({
                     size="sm"
                   >
                     <Copy className="h-4 w-4 mr-2" />
-                    Copy Output
+                    {t('agentRunOutput.copyOutput')}
                     <ChevronDown className="h-3 w-3 ml-2" />
                   </Button>
                 }
@@ -618,7 +620,7 @@ export function AgentRunOutputViewer({
                 onClick={() => setIsFullscreen(false)}
               >
                 <Minimize2 className="h-4 w-4 mr-2" />
-                Exit Fullscreen
+                {t('agentRunOutput.exitFullscreenButton')}
               </Button>
             </div>
           </div>
@@ -630,7 +632,7 @@ export function AgentRunOutputViewer({
             <div className="max-w-4xl mx-auto space-y-2">
               {messages.length === 0 ? (
                 <div className="text-center text-muted-foreground py-8">
-                  No output available yet
+                  {t('agentRunOutput.noOutputAvailable')}
                 </div>
               ) : (
                 <>

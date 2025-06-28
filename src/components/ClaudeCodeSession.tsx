@@ -31,6 +31,7 @@ import { SplitPane } from "@/components/ui/split-pane";
 import { WebviewPreview } from "./WebviewPreview";
 import type { ClaudeStreamMessage } from "./AgentExecution";
 import { useVirtualizer } from "@tanstack/react-virtual";
+import { useTranslation } from "@/hooks/useTranslation";
 
 interface ClaudeCodeSessionProps {
   /**
@@ -63,6 +64,7 @@ export const ClaudeCodeSession: React.FC<ClaudeCodeSessionProps> = ({
   onBack,
   className,
 }) => {
+  const { t } = useTranslation();
   const [projectPath, setProjectPath] = useState(initialProjectPath || session?.project_path || "");
   const [messages, setMessages] = useState<ClaudeStreamMessage[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -240,7 +242,7 @@ export const ClaudeCodeSession: React.FC<ClaudeCodeSessionProps> = ({
       setIsFirstPrompt(false);
     } catch (err) {
       console.error("Failed to load session history:", err);
-      setError("Failed to load session history");
+      setError(t('claudeCodeSession.failedToLoadHistory'));
     } finally {
       setIsLoading(false);
     }
@@ -251,7 +253,7 @@ export const ClaudeCodeSession: React.FC<ClaudeCodeSessionProps> = ({
       const selected = await open({
         directory: true,
         multiple: false,
-        title: "Select Project Directory"
+        title: t('claudeCodeSession.selectProjectDirectory')
       });
       
       if (selected) {
@@ -261,7 +263,7 @@ export const ClaudeCodeSession: React.FC<ClaudeCodeSessionProps> = ({
     } catch (err) {
       console.error("Failed to select directory:", err);
       const errorMessage = err instanceof Error ? err.message : String(err);
-      setError(`Failed to select directory: ${errorMessage}`);
+      setError(`${t('claudeCodeSession.failedToSelectDirectory')}: ${errorMessage}`);
     }
   };
 
@@ -269,7 +271,7 @@ export const ClaudeCodeSession: React.FC<ClaudeCodeSessionProps> = ({
     console.log('[ClaudeCodeSession] handleSendPrompt called with:', { prompt, model, projectPath });
     
     if (!projectPath) {
-      setError("Please select a project directory first");
+      setError(t('claudeCodeSession.selectProjectFirst'));
       return;
     }
 
@@ -389,7 +391,7 @@ export const ClaudeCodeSession: React.FC<ClaudeCodeSessionProps> = ({
       }
     } catch (err) {
       console.error("Failed to send prompt:", err);
-      setError("Failed to send prompt");
+      setError(t('claudeCodeSession.failedToSendPrompt'));
       setIsLoading(false);
       hasActiveSessionRef.current = false;
     }
@@ -402,21 +404,21 @@ export const ClaudeCodeSession: React.FC<ClaudeCodeSessionProps> = ({
   };
 
   const handleCopyAsMarkdown = async () => {
-    let markdown = `# Claude Code Session\n\n`;
-    markdown += `**Project:** ${projectPath}\n`;
-    markdown += `**Date:** ${new Date().toISOString()}\n\n`;
+    let markdown = `# ${t('claudeCodeSession.title')}\n\n`;
+    markdown += `**${t('claudeCodeSession.project')}:** ${projectPath}\n`;
+    markdown += `**${t('claudeCodeSession.date')}:** ${new Date().toISOString()}\n\n`;
     markdown += `---\n\n`;
 
     for (const msg of messages) {
       if (msg.type === "system" && msg.subtype === "init") {
-        markdown += `## System Initialization\n\n`;
-        markdown += `- Session ID: \`${msg.session_id || 'N/A'}\`\n`;
-        markdown += `- Model: \`${msg.model || 'default'}\`\n`;
-        if (msg.cwd) markdown += `- Working Directory: \`${msg.cwd}\`\n`;
-        if (msg.tools?.length) markdown += `- Tools: ${msg.tools.join(', ')}\n`;
+        markdown += `## ${t('claudeCodeSession.systemInitialization')}\n\n`;
+        markdown += `- ${t('claudeCodeSession.sessionId')}: \`${msg.session_id || 'N/A'}\`\n`;
+        markdown += `- ${t('claudeCodeSession.model')}: \`${msg.model || 'default'}\`\n`;
+        if (msg.cwd) markdown += `- ${t('claudeCodeSession.workingDirectory')}: \`${msg.cwd}\`\n`;
+        if (msg.tools?.length) markdown += `- ${t('claudeCodeSession.tools')}: ${msg.tools.join(', ')}\n`;
         markdown += `\n`;
       } else if (msg.type === "assistant" && msg.message) {
-        markdown += `## Assistant\n\n`;
+        markdown += `## ${t('claudeCodeSession.assistant')}\n\n`;
         for (const content of msg.message.content || []) {
           if (content.type === "text") {
             const textContent = typeof content.text === 'string' 
@@ -424,15 +426,15 @@ export const ClaudeCodeSession: React.FC<ClaudeCodeSessionProps> = ({
               : (content.text?.text || JSON.stringify(content.text || content));
             markdown += `${textContent}\n\n`;
           } else if (content.type === "tool_use") {
-            markdown += `### Tool: ${content.name}\n\n`;
+            markdown += `### ${t('claudeCodeSession.tool')}: ${content.name}\n\n`;
             markdown += `\`\`\`json\n${JSON.stringify(content.input, null, 2)}\n\`\`\`\n\n`;
           }
         }
         if (msg.message.usage) {
-          markdown += `*Tokens: ${msg.message.usage.input_tokens} in, ${msg.message.usage.output_tokens} out*\n\n`;
+          markdown += `*${t('claudeCodeSession.tokensUsage').replace('{input}', msg.message.usage.input_tokens.toString()).replace('{output}', msg.message.usage.output_tokens.toString())}*\n\n`;
         }
       } else if (msg.type === "user" && msg.message) {
-        markdown += `## User\n\n`;
+        markdown += `## ${t('claudeCodeSession.user')}\n\n`;
         for (const content of msg.message.content || []) {
           if (content.type === "text") {
             const textContent = typeof content.text === 'string' 
@@ -440,7 +442,7 @@ export const ClaudeCodeSession: React.FC<ClaudeCodeSessionProps> = ({
               : (content.text?.text || JSON.stringify(content.text));
             markdown += `${textContent}\n\n`;
           } else if (content.type === "tool_result") {
-            markdown += `### Tool Result\n\n`;
+            markdown += `### ${t('claudeCodeSession.toolResult')}\n\n`;
             let contentText = '';
             if (typeof content.content === 'string') {
               contentText = content.content;
@@ -459,12 +461,12 @@ export const ClaudeCodeSession: React.FC<ClaudeCodeSessionProps> = ({
           }
         }
       } else if (msg.type === "result") {
-        markdown += `## Execution Result\n\n`;
+        markdown += `## ${t('claudeCodeSession.executionResult')}\n\n`;
         if (msg.result) {
           markdown += `${msg.result}\n\n`;
         }
         if (msg.error) {
-          markdown += `**Error:** ${msg.error}\n\n`;
+          markdown += `**${t('claudeCodeSession.error')}:** ${msg.error}\n\n`;
         }
       }
     }
@@ -497,7 +499,7 @@ export const ClaudeCodeSession: React.FC<ClaudeCodeSessionProps> = ({
       const cancelMessage: ClaudeStreamMessage = {
         type: "system",
         subtype: "cancelled",
-        result: "Execution cancelled by user",
+        result: t('claudeCodeSession.executionCancelledByUser'),
         timestamp: new Date().toISOString()
       };
       setMessages(prev => [...prev, cancelMessage]);
@@ -508,7 +510,7 @@ export const ClaudeCodeSession: React.FC<ClaudeCodeSessionProps> = ({
       setError(null);
     } catch (err) {
       console.error("Failed to cancel execution:", err);
-      setError("Failed to cancel execution");
+      setError(t('claudeCodeSession.failedToCancelExecution'));
     } finally {
       setIsCancelling(false);
     }
@@ -546,7 +548,7 @@ export const ClaudeCodeSession: React.FC<ClaudeCodeSessionProps> = ({
       setForkSessionName("");
     } catch (err) {
       console.error("Failed to fork checkpoint:", err);
-      setError("Failed to fork checkpoint");
+      setError(t('claudeCodeSession.failedToForkCheckpoint'));
     } finally {
       setIsLoading(false);
     }
@@ -567,7 +569,7 @@ export const ClaudeCodeSession: React.FC<ClaudeCodeSessionProps> = ({
   };
 
   const handlePreviewScreenshot = async (imagePath: string) => {
-    console.log("Screenshot captured:", imagePath);
+    console.log(t('claudeCodeSession.screenshotCaptured'), imagePath);
     
     // Add the screenshot to the floating prompt input
     if (floatingPromptRef.current) {
@@ -679,14 +681,14 @@ export const ClaudeCodeSession: React.FC<ClaudeCodeSessionProps> = ({
       className="p-4 border-b border-border flex-shrink-0"
     >
       <Label htmlFor="project-path" className="text-sm font-medium">
-        Project Directory
+        {t('claudeCodeSession.projectDirectory')}
       </Label>
       <div className="flex items-center gap-2 mt-1">
         <Input
           id="project-path"
           value={projectPath}
           onChange={(e) => setProjectPath(e.target.value)}
-          placeholder="/path/to/your/project"
+          placeholder={t('claudeCodeSession.projectPathPlaceholder')}
           className="flex-1"
           disabled={isLoading}
         />
@@ -750,9 +752,9 @@ export const ClaudeCodeSession: React.FC<ClaudeCodeSessionProps> = ({
             <div className="flex items-center gap-2">
               <Terminal className="h-5 w-5" />
               <div>
-                <h2 className="text-lg font-semibold">Claude Code Session</h2>
+                <h2 className="text-lg font-semibold">{t('claudeCodeSession.title')}</h2>
                 <p className="text-xs text-muted-foreground">
-                  {session ? `Resuming session ${session.id.slice(0, 8)}...` : 'Interactive session'}
+                  {session ? `${t('claudeCodeSession.resumingSession')} ${session.id.slice(0, 8)}...` : t('claudeCodeSession.interactiveSession')}
                 </p>
               </div>
             </div>
@@ -768,7 +770,7 @@ export const ClaudeCodeSession: React.FC<ClaudeCodeSessionProps> = ({
                   className="flex items-center gap-2"
                 >
                   <Settings className="h-4 w-4" />
-                  Settings
+                  {t('claudeCodeSession.settings')}
                 </Button>
                 <Button
                   variant="outline"
@@ -777,7 +779,7 @@ export const ClaudeCodeSession: React.FC<ClaudeCodeSessionProps> = ({
                   className="flex items-center gap-2"
                 >
                   <GitBranch className="h-4 w-4" />
-                  Timeline
+                  {t('claudeCodeSession.timeline')}
                 </Button>
               </>
             )}
@@ -800,13 +802,13 @@ export const ClaudeCodeSession: React.FC<ClaudeCodeSessionProps> = ({
                     className="flex items-center gap-2"
                   >
                     <Globe className="h-4 w-4" />
-                    {showPreview ? "Close Preview" : "Preview"}
+                    {showPreview ? t('claudeCodeSession.closePreview') : t('claudeCodeSession.preview')}
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent>
                   {showPreview 
-                    ? "Close the preview pane" 
-                    : "Open a browser preview to test your web applications"
+                    ? t('claudeCodeSession.closeBrowserPreview') 
+                    : t('claudeCodeSession.openBrowserPreview')
                   }
                 </TooltipContent>
               </Tooltip>
@@ -821,7 +823,7 @@ export const ClaudeCodeSession: React.FC<ClaudeCodeSessionProps> = ({
                     className="flex items-center gap-2"
                   >
                     <Copy className="h-4 w-4" />
-                    Copy Output
+                    {t('claudeCodeSession.copyOutput')}
                     <ChevronDown className="h-3 w-3" />
                   </Button>
                 }
@@ -833,7 +835,7 @@ export const ClaudeCodeSession: React.FC<ClaudeCodeSessionProps> = ({
                       onClick={handleCopyAsMarkdown}
                       className="w-full justify-start"
                     >
-                      Copy as Markdown
+                      {t('claudeCodeSession.copyAsMarkdown')}
                     </Button>
                     <Button
                       variant="ghost"
@@ -841,7 +843,7 @@ export const ClaudeCodeSession: React.FC<ClaudeCodeSessionProps> = ({
                       onClick={handleCopyAsJsonl}
                       className="w-full justify-start"
                     >
-                      Copy as JSONL
+                      {t('claudeCodeSession.copyAsJsonl')}
                     </Button>
                   </div>
                 }
@@ -894,7 +896,7 @@ export const ClaudeCodeSession: React.FC<ClaudeCodeSessionProps> = ({
               <div className="flex items-center gap-3">
                 <Loader2 className="h-6 w-6 animate-spin" />
                 <span className="text-sm text-muted-foreground">
-                  {session ? "Loading session history..." : "Initializing Claude Code..."}
+                  {session ? t('claudeCodeSession.loadingSessionHistory') : t('claudeCodeSession.initializingClaudeCode')}
                 </span>
               </div>
             </div>
@@ -931,18 +933,18 @@ export const ClaudeCodeSession: React.FC<ClaudeCodeSessionProps> = ({
       <Dialog open={showForkDialog} onOpenChange={setShowForkDialog}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Fork Session</DialogTitle>
+            <DialogTitle>{t('claudeCodeSession.forkSession')}</DialogTitle>
             <DialogDescription>
-              Create a new session branch from the selected checkpoint.
+              {t('claudeCodeSession.forkSessionDescription')}
             </DialogDescription>
           </DialogHeader>
           
           <div className="space-y-4 py-4">
             <div className="space-y-2">
-              <Label htmlFor="fork-name">New Session Name</Label>
+              <Label htmlFor="fork-name">{t('claudeCodeSession.newSessionName')}</Label>
               <Input
                 id="fork-name"
-                placeholder="e.g., Alternative approach"
+                placeholder={t('claudeCodeSession.alternativeApproachPlaceholder')}
                 value={forkSessionName}
                 onChange={(e) => setForkSessionName(e.target.value)}
                 onKeyPress={(e) => {
@@ -960,13 +962,13 @@ export const ClaudeCodeSession: React.FC<ClaudeCodeSessionProps> = ({
               onClick={() => setShowForkDialog(false)}
               disabled={isLoading}
             >
-              Cancel
+              {t('common.cancel')}
             </Button>
             <Button
               onClick={handleConfirmFork}
               disabled={isLoading || !forkSessionName.trim()}
             >
-              Create Fork
+              {t('claudeCodeSession.createFork')}
             </Button>
           </DialogFooter>
         </DialogContent>

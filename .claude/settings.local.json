@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(find:*)",
+      "Bash(rg:*)",
+      "Bash(mkdir:*)",
+      "Bash(bun scripts/scan-untranslated.ts:*)",
+      "Bash(grep:*)",
+      "Bash(bun run:*)",
+      "Bash(bunx tsc:*)"
+    ],
+    "deny": []
+  }
+}
