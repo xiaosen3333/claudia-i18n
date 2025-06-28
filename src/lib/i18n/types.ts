@@ -25,12 +25,32 @@ export interface TranslationKeys {
     remove: string;
     clear: string;
     refresh: string;
+    thinking: string;
+    seconds: string;
+    copy: string;
+    copied: string;
+    viewOutput: string;
+    stop: string;
+    collapse: string;
+    expand: string;
+    searchFailed: string;
+    noMatchesFound: string;
+    commandFailed: string;
+    commandCompleted: string;
+    taskInstructions: string;
+    noFilesFound: string;
+    emptyDirectory: string;
+    clickToSelect: string;
+    unknownError: string;
+    clickExpandToView: string;
+    noMatchesForPattern: string;
   };
 
   app: {
     title: string;
     welcome: string;
     backToHome: string;
+    name: string;
   };
 
   navigation: {
@@ -326,6 +346,401 @@ export interface TranslationKeys {
     removeServer: string;
     editServer: string;
     testConnection: string;
+    jsonFormatExamples: string;
+  };
+
+  // Checkpoint Settings
+  checkpointSettings: {
+    title: string;
+    experimentalFeature: string;
+    experimentalWarning: string;
+    automaticCheckpoints: string;
+    automaticCheckpointsDescription: string;
+    checkpointStrategy: string;
+    strategyManual: string;
+    strategyPerPrompt: string;
+    strategyPerToolUse: string;
+    strategySmart: string;
+    strategyManualDescription: string;
+    strategyPerPromptDescription: string;
+    strategyPerToolUseDescription: string;
+    strategySmartDescription: string;
+    storageManagement: string;
+    totalCheckpoints: string;
+    keepRecentCheckpoints: string;
+    cleanUp: string;
+    cleanUpDescription: string;
+    removedCheckpoints: string;
+    failedToLoadSettings: string;
+    failedToSaveSettings: string;
+    failedToCleanup: string;
+    settingsSaved: string;
+  };
+
+  // Common UI elements and placeholders
+  placeholders: {
+    typePromptHere: string;
+    searchIcons: string;
+    enterUrl: string;
+    exampleText: string;
+    searchAgents: string;
+    projectPath: string;
+    alternativeApproach: string;
+    key: string;
+    value: string;
+    serverName: string;
+    serverPath: string;
+    serverArgs: string;
+    sseEndpoint: string;
+    bashExample: string;
+    curlExample: string;
+    apiKeyPath: string;
+    dropImagesHere: string;
+  };
+
+  // Status and states
+  status: {
+    running: string;
+    completed: string;
+    failed: string;
+    pending: string;
+    cancelled: string;
+    ready: string;
+    active: string;
+    inactive: string;
+  };
+
+  // Error Boundary
+  errorBoundary: {
+    title: string;
+    description: string;
+    tryAgain: string;
+    errorDetails: string;
+    stackTrace: string;
+  };
+
+  // Webview Preview
+  webviewPreview: {
+    title: string;
+    webPreview: string;
+    noUrlProvided: string;
+    tryEntering: string;
+    orAnyOtherUrl: string;
+  };
+
+  // Preview Prompt Dialog
+  previewPromptDialog: {
+    openPreview: string;
+    openPreviewQuestion: string;
+    detectedUrlMessage: string;
+    localDevelopmentServer: string;
+    externalUrl: string;
+    previewWillOpen: string;
+  };
+
+  // Session Output Viewer  
+  sessionOutput: {
+    fullscreen: string;
+    refresh: string;
+    sessionOutput: string;
+    failedToLoad: string;
+    refreshed: string;
+    failedToRefresh: string;
+    waitingForOutput: string;
+    agentRunningNoOutput: string;
+    noOutputAvailable: string;
+  };
+
+  // Agent Run
+  agentRun: {
+    goBack: string;
+    openInFullView: string;
+    refreshOutput: string;
+    failedToLoad: string;
+    runNotFound: string;
+    executionHistory: string;
+    agentExecution: string;
+    duration: string;
+    tokens: string;
+    cost: string;
+    systemInitialization: string;
+    sessionId: string;
+    model: string;
+    workingDirectory: string;
+    tools: string;
+    assistant: string;
+    user: string;
+    toolResult: string;
+    executionResult: string;
+    error: string;
+    tool: string;
+    tokensUsage: string;
+  };
+
+  // Timeline Navigator
+  timelineNavigator: {
+    checkpoint: string;
+    checkpointName: string;
+    checkpointNamePlaceholder: string;
+    experimentalFeature: string;
+    experimentalWarning: string;
+    timeline: string;
+    checkpoints: string;
+    failedToLoadTimeline: string;
+    current: string;
+    noPrompt: string;
+    tokens: string;
+    files: string;
+    restoreToCheckpoint: string;
+    forkFromCheckpoint: string;
+    compareWithCheckpoint: string;
+    loadingTimeline: string;
+    noCheckpointsYet: string;
+    createCheckpoint: string;
+    createCheckpointTitle: string;
+    saveCurrentState: string;
+    descriptionOptional: string;
+    cancel: string;
+    failedToCreateCheckpoint: string;
+    failedToRestoreCheckpoint: string;
+    failedToCompareCheckpoints: string;
+    restoreConfirm: string;
+    autoSaveBeforeRestore: string;
+    checkpointComparison: string;
+    changesBetween: string;
+    modifiedFiles: string;
+    addedFiles: string;
+    deletedFiles: string;
+    close: string;
+  };
+
+  // Icon Picker
+  iconPicker: {
+    selectIcon: string;
+    selectedIcon: string;
+    clickToSelect: string;
+    iconsAvailable: string;
+  };
+
+  // Claude Version Selector
+  claudeVersion: {
+    downloadProgress: string;
+    officialRelease: string;
+    nightlyBuild: string;
+    developerBuild: string;
+    downloadFailed: string;
+    downloadComplete: string;
+    verifying: string;
+    verified: string;
+    validating: string;
+    downloadingClaudeCode: string;
+    installingClaudeCode: string;
+    installationFailed: string;
+    selectChannel: string;
+    availableVersions: string;
+    installed: string;
+    downloading: string;
+    selectForInstall: string;
+    selectInstallation: string;
+    noInstallationsFound: string;
+    failedToLoadInstallations: string;
+    systemPath: string;
+    homebrew: string;
+    system: string;
+    localBin: string;
+    claudeLocal: string;
+    npmGlobal: string;
+    yarn: string;
+    bun: string;
+    current: string;
+    saving: string;
+    saveSelection: string;
+  };
+
+  // Claude Code Session
+  claudeCodeSession: {
+    title: string;
+    failedToLoadHistory: string;
+    selectDirectory: string;
+    selectProjectDirectory: string;
+    failedToSelectDirectory: string;
+    selectProjectFirst: string;
+    failedToSendPrompt: string;
+    executionCancelledByUser: string;
+    failedToCancelExecution: string;
+    failedToForkCheckpoint: string;
+    screenshotCaptured: string;
+    resumingSession: string;
+    interactiveSession: string;
+    settings: string;
+    timeline: string;
+    closePreview: string;
+    preview: string;
+    closeBrowserPreview: string;
+    openBrowserPreview: string;
+    copyOutput: string;
+    copyAsMarkdown: string;
+    copyAsJsonl: string;
+    loadingSessionHistory: string;
+    initializingClaudeCode: string;
+    projectDirectory: string;
+    project: string;
+    date: string;
+    systemInitialization: string;
+    sessionId: string;
+    model: string;
+    workingDirectory: string;
+    tools: string;
+    assistant: string;
+    user: string;
+    toolResult: string;
+    executionResult: string;
+    error: string;
+    tool: string;
+    tokensUsage: string;
+    forkSession: string;
+    forkSessionDescription: string;
+    newSessionName: string;
+    cancel: string;
+    createFork: string;
+    projectPathPlaceholder: string;
+    alternativeApproachPlaceholder: string;
+  };
+
+  // GitHub Agent Browser
+  githubAgentBrowser: {
+    title: string;
+    browseAgents: string;
+    searchPlaceholder: string;
+    loading: string;
+    loadFailed: string;
+    noAgentsFound: string;
+    importAgent: string;
+    agentDetails: string;
+    author: string;
+    stars: string;
+    importInProgress: string;
+    fetchedFrom: string;
+    contributeMessage: string;
+    tryAgain: string;
+    noAgentsMatchingSearch: string;
+    noAgentsAvailable: string;
+    imported: string;
+    preview: string;
+    agentPreview: string;
+    systemPrompt: string;
+    defaultTask: string;
+    permissions: string;
+    fileRead: string;
+    fileWrite: string;
+    network: string;
+    yes: string;
+    no: string;
+    version: string;
+    exported: string;
+    cancel: string;
+    importing: string;
+    alreadyImported: string;
+  };
+
+  // Floating Prompt Input  
+  floatingPrompt: {
+    placeholder: string;
+    send: string;
+    cancel: string;
+    keyboardHints: string;
+  };
+
+  // MCP Add Server
+  mcpAddServer: {
+    title: string;
+    serverType: string;
+    typeStdio: string;
+    typeSse: string;
+    configuration: string;
+    name: string;
+    namePlaceholder: string;
+    nameDescription: string;
+    command: string;
+    commandPlaceholder: string;
+    commandDescription: string;
+    args: string;
+    argsPlaceholder: string;
+    argsDescription: string;
+    sseUrl: string;
+    sseUrlPlaceholder: string;
+    sseUrlDescription: string;
+    environmentVariables: string;
+    envDescription: string;
+    keyPlaceholder: string;
+    valuePlaceholder: string;
+    addVariable: string;
+    cancel: string;
+    add: string;
+    nameRequired: string;
+    commandRequired: string;
+    urlRequired: string;
+    scope: string;
+    scopeLocal: string;
+    scopeProject: string;
+    scopeUser: string;
+    exampleCommands: string;
+  };
+
+  // NFO Credits
+  nfoCredits: {
+    title: string;
+    builtWith: string;
+    fileABug: string;
+    version: string;
+    byAsterisk: string;
+    credits: string;
+    poweredBy: string;
+    ultimateCodingAssistant: string;
+    mcpProtocol: string;
+    dependencies: string;
+    runtime: string;
+    uiFramework: string;
+    styling: string;
+    animations: string;
+    buildTool: string;
+    packageManager: string;
+    specialThanks: string;
+    toOpenSource: string;
+    toBetaTesters: string;
+    toEveryone: string;
+    sharingIsCaring: string;
+    supportDevelopers: string;
+  };
+
+  // Stream Message
+  streamMessage: {
+    executionFailed: string;
+    executionComplete: string;
+  };
+
+  // Agent Run Output Viewer
+  agentRunOutput: {
+    failedToLoadOutput: string;
+    agentExecutionCompleted: string;
+    agentExecutionCancelled: string;
+    outputCopiedAsJsonl: string;
+    outputCopiedAsMarkdown: string;
+    loadingOutput: string;
+    noOutputAvailable: string;
+    running: string;
+    copy: string;
+    copyAsJsonl: string;
+    copyAsMarkdown: string;
+    openInFullView: string;
+    exitFullscreen: string;
+    enterFullscreen: string;
+    refreshOutput: string;
+    exitFullscreenButton: string;
+    copyOutput: string;
+    agentExecution: string;
+    claudeOpus: string;
+    claudeSonnet: string;
   };
 
 

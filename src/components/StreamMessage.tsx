@@ -13,6 +13,7 @@ import remarkGfm from "remark-gfm";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { claudeSyntaxTheme } from "@/lib/claudeSyntaxTheme";
 import type { ClaudeStreamMessage } from "./AgentExecution";
+import { useTranslation } from "@/hooks/useTranslation";
 import {
   TodoWidget,
   LSWidget,
@@ -49,6 +50,7 @@ interface StreamMessageProps {
  * Component to render a single Claude Code stream message
  */
 const StreamMessageComponent: React.FC<StreamMessageProps> = ({ message, className, streamMessages, onLinkDetected }) => {
+  const { t } = useTranslation();
   // State to track tool results mapped by tool call ID
   const [toolResults, setToolResults] = useState<Map<string, any>>(new Map());
   
@@ -634,7 +636,7 @@ const StreamMessageComponent: React.FC<StreamMessageProps> = ({ message, classNa
               )}
               <div className="flex-1 space-y-2">
                 <h4 className="font-semibold text-sm">
-                  {isError ? "Execution Failed" : "Execution Complete"}
+                  {isError ? t('streamMessage.executionFailed') : t('streamMessage.executionComplete')}
                 </h4>
                 
                 {message.result && (
@@ -707,7 +709,7 @@ const StreamMessageComponent: React.FC<StreamMessageProps> = ({ message, classNa
             <div className="flex-1">
               <p className="text-sm font-medium">Error rendering message</p>
               <p className="text-xs text-muted-foreground mt-1">
-                {error instanceof Error ? error.message : 'Unknown error'}
+                {error instanceof Error ? error.message : t('common.unknownError')}
               </p>
             </div>
           </div>

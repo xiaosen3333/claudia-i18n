@@ -48,6 +48,7 @@ import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { claudeSyntaxTheme } from "@/lib/claudeSyntaxTheme";
 import { Button } from "@/components/ui/button";
 import { createPortal } from "react-dom";
+import { useTranslation } from "@/hooks/useTranslation";
 import * as Diff from 'diff';
 import { Card, CardContent } from "@/components/ui/card";
 import { detectLinks, makeLinksClickable } from "@/lib/linkDetector";
@@ -390,6 +391,7 @@ export const ReadWidget: React.FC<{ filePath: string; result?: any }> = ({ fileP
  * Widget for Read tool result - shows file content with line numbers
  */
 export const ReadResultWidget: React.FC<{ content: string; filePath?: string }> = ({ content, filePath }) => {
+  const { t } = useTranslation();
   const [isExpanded, setIsExpanded] = useState(false);
   
   // Extract file extension for syntax highlighting
@@ -512,7 +514,7 @@ export const ReadResultWidget: React.FC<{ content: string; filePath?: string }> 
             className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors"
           >
             <ChevronRight className={cn("h-3 w-3 transition-transform", isExpanded && "rotate-90")} />
-            {isExpanded ? "Collapse" : "Expand"}
+            {isExpanded ? t('common.collapse') : t('common.expand')}
           </button>
         )}
       </div>
@@ -549,7 +551,7 @@ export const ReadResultWidget: React.FC<{ content: string; filePath?: string }> 
       
       {isLargeFile && !isExpanded && (
         <div className="px-4 py-3 text-xs text-muted-foreground text-center bg-zinc-900/30">
-          Click "Expand" to view the full file
+          {t('common.clickExpandToView')}
         </div>
       )}
     </div>
@@ -560,6 +562,7 @@ export const ReadResultWidget: React.FC<{ content: string; filePath?: string }> 
  * Widget for Glob tool
  */
 export const GlobWidget: React.FC<{ pattern: string; result?: any }> = ({ pattern, result }) => {
+  const { t } = useTranslation();
   // Extract result content if available
   let resultContent = '';
   let isError = false;
@@ -605,7 +608,7 @@ export const GlobWidget: React.FC<{ pattern: string; result?: any }> = ({ patter
             ? "border-red-500/20 bg-red-500/5 text-red-400" 
             : "border-green-500/20 bg-green-500/5 text-green-300"
         )}>
-          {resultContent || (isError ? "Search failed" : "No matches found")}
+          {resultContent || (isError ? t('common.searchFailed') : t('common.noMatchesFound'))}
         </div>
       )}
     </div>
@@ -620,6 +623,7 @@ export const BashWidget: React.FC<{
   description?: string;
   result?: any;
 }> = ({ command, description, result }) => {
+  const { t } = useTranslation();
   // Extract result content if available
   let resultContent = '';
   let isError = false;
@@ -673,7 +677,7 @@ export const BashWidget: React.FC<{
               ? "border-red-500/20 bg-red-500/5 text-red-400" 
               : "border-green-500/20 bg-green-500/5 text-green-300"
           )}>
-            {resultContent || (isError ? "Command failed" : "Command completed")}
+            {resultContent || (isError ? t('common.commandFailed') : t('common.commandCompleted'))}
           </div>
         )}
       </div>
@@ -860,6 +864,7 @@ export const GrepWidget: React.FC<{
   exclude?: string;
   result?: any;
 }> = ({ pattern, include, path, exclude, result }) => {
+  const { t } = useTranslation();
   const [isExpanded, setIsExpanded] = useState(true);
   
   // Extract result content if available
@@ -987,7 +992,7 @@ export const GrepWidget: React.FC<{
             <div className="flex items-center gap-3 p-4 rounded-lg bg-red-500/10 border border-red-500/20">
               <AlertCircle className="h-5 w-5 text-red-500 flex-shrink-0" />
               <div className="text-sm text-red-600 dark:text-red-400">
-                {resultContent || "Search failed"}
+                {resultContent || t('common.searchFailed')}
               </div>
             </div>
           ) : grepResults.length > 0 ? (
@@ -1052,7 +1057,7 @@ export const GrepWidget: React.FC<{
             <div className="flex items-center gap-3 p-4 rounded-lg bg-amber-500/10 border border-amber-500/20">
               <Info className="h-5 w-5 text-amber-500 flex-shrink-0" />
               <div className="text-sm text-amber-600 dark:text-amber-400">
-                No matches found for the given pattern.
+                {t('common.noMatchesForPattern')}
               </div>
             </div>
           )}
@@ -1985,6 +1990,7 @@ export const TaskWidget: React.FC<{
   prompt?: string;
   result?: any;
 }> = ({ description, prompt, result: _result }) => {
+  const { t } = useTranslation();
   const [isExpanded, setIsExpanded] = useState(false);
   
   return (
@@ -2015,7 +2021,7 @@ export const TaskWidget: React.FC<{
               className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground hover:text-foreground transition-colors"
             >
               <ChevronRight className={cn("h-3 w-3 transition-transform", isExpanded && "rotate-90")} />
-              <span>Task Instructions</span>
+              <span>{t('common.taskInstructions')}</span>
             </button>
             
             {isExpanded && (
